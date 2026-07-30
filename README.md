@@ -4,36 +4,35 @@
 > Tableau de bord interactif mesurant l'alignement entre l'offre de formation, le financement public et l'insertion professionnelle.
 
 ---
-
-## 🚀 Démo en ligne
+##  Démo en ligne
 
 🔗 **[Voir le dashboard en direct](TON_URL_ICI)** *(à remplacer après déploiement)*
 
 ---
 
-## 📊 Fonctionnalités
+##  Fonctionnalités
 
 | Onglet | Description |
 |--------|-------------|
-| 🗺️ **Cartographie** | Carte interactive des 200+ établissements de formation technique géolocalisés |
-| 🎓 **Indicateurs Clés** | Effectifs, féminisation (51,5%), filières STEM (23,62%), ratio étudiant/enseignant (91:1) |
-| 💰 **Budget & Dépenses** | Budget voté vs exécuté, dépenses par étudiant, part du PIB |
-| 🏛️ **Établissements** | Répartition par ville, type et statut (public/privé) |
-| 💼 **Chômage & Emploi** | Taux de chômage des diplômés, corrélation inscription/chômage |
-| 💡 **Recommandations** | 7 recommandations stratégiques chiffrées avec matrice d'impact |
-| 🔮 **Simulateur** | *Fonctionnalité exclusive* — ajustez les leviers et voyez l'impact prédictif sur 2030 |
+|  **Cartographie** | Carte interactive des 200+ établissements de formation technique géolocalisés |
+|  **Indicateurs Clés** | Effectifs, féminisation (51,5%), filières STEM (23,62%), ratio étudiant/enseignant (91:1) |
+|  **Budget & Dépenses** | Budget voté vs exécuté, dépenses par étudiant, part du PIB |
+|  **Établissements** | Répartition par ville, type et statut (public/privé) |
+|  **Chômage & Emploi** | Taux de chômage des diplômés, corrélation inscription/chômage |
+|  **Recommandations** | 7 recommandations stratégiques chiffrées avec matrice d'impact |
+|  **Simulateur** | *Fonctionnalité exclusive* — ajustez les leviers et voyez l'impact prédictif sur 2030 |
 
 ---
 
-## 🎯 Fonctionnalités différenciantes
+##  Fonctionnalités différenciantes
 
-- 🚨 **Alertes automatiques** : Détection des anomalies (ratio critique, chômage élevé, sous-exécution budgétaire)
-- 🔮 **Simulateur de scénarios** : Modèle prédictif interactif pour 2030
-- 📈 **Corrélations** : Analyse budget vs chômage, inscription vs insertion
+-  **Alertes automatiques** : Détection des anomalies (ratio critique, chômage élevé, sous-exécution budgétaire)
+- **Simulateur de scénarios** : Modèle prédictif interactif pour 2030
+-  **Corrélations** : Analyse budget vs chômage, inscription vs insertion
 
 ---
 
-## 📁 Structure du projet
+##  Structure du projet
 
 ```
 .
@@ -111,16 +110,16 @@ Toutes les données proviennent de la plateforme **DataLab Togo** :
 
 ---
 
-## 🏆 Challenge
+##  Challenge
 
 **Togo Data AI Lab — Challenge Éducation — Défi 2**  
 *Construire un tableau de bord mesurant l'adéquation formation-emploi au Togo*
 
 ---
 
-## 👤 Auteur
+##  Auteur
 
-**[VOTRE NOM]**  
+Yves Pideng-Pinawè   
 Participant au Challenge Togo Data AI Lab
 
 ---
