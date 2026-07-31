@@ -72,7 +72,7 @@ with st.sidebar:
     selected_region = st.multiselect("Regions", options=regions_dispo, default=regions_dispo)
 
     st.divider()
-    st.markdown("**Auteur:** "Pideng-Pinawè DANGO")
+    st.markdown("**Auteur:** Pideng-Pinawè DANGO")
     st.markdown("**Challenge:** DataLab Togo")
     st.markdown("---")
     st.markdown("<small>Dashboard interactif deploye avec Streamlit</small>", unsafe_allow_html=True)
