@@ -4,6 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
+from pathlib import Path
 
 st.set_page_config(
     page_title="Togo Education - Adequation Formation-Emploi",
@@ -33,28 +34,25 @@ st.markdown("""
 
 # ==================== CHARGEMENT DONNÉES ====================
 @st.cache_data
+
+BASE_DIR = Path(__file__).resolve().parent
+
+@st.cache_data
 def load_data():
-    # Formations techniques
-    ft = pd.read_csv("formations_techniques_clean.csv")
+    ft = pd.read_csv(BASE_DIR / "formations_techniques_clean.csv")
     ft = ft[ft['latitude'].notna() & ft['longitude'].notna()].copy()
 
-    # Indicateurs clés (wide)
-    ic = pd.read_csv("indicateurs_cles_wide.csv")
+    ic = pd.read_csv(BASE_DIR / "indicateurs_cles_wide.csv")
 
-    # Budget (wide)
-    bud = pd.read_csv("/budget_wide.csv")
+    bud = pd.read_csv(BASE_DIR / "budget_wide.csv")
 
-    # Répartition établissements
-    rep = pd.read_csv("repartition_etablissements_clean.csv")
+    rep = pd.read_csv(BASE_DIR / "repartition_etablissements_clean.csv")
 
-    # Chômage
-    chom = pd.read_csv("chomage_clean.csv")
+    chom = pd.read_csv(BASE_DIR / "chomage_clean.csv")
 
-    # Dépenses PIB
-    dep = pd.read_csv("depenses_clean.csv")
+    dep = pd.read_csv(BASE_DIR / "depenses_clean.csv")
 
-    # Inscriptions
-    ins = pd.read_csv("inscriptions_clean.csv")
+    ins = pd.read_csv(BASE_DIR / "inscriptions_clean.csv")
 
     return ft, ic, bud, rep, chom, dep, ins
 
