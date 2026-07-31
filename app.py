@@ -33,8 +33,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==================== CHARGEMENT DONNÉES ====================
-@st.cache_data
-
 BASE_DIR = Path(__file__).resolve().parent
 
 @st.cache_data
