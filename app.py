@@ -35,26 +35,26 @@ st.markdown("""
 @st.cache_data
 def load_data():
     # Formations techniques
-    ft = pd.read_csv("data/formations_techniques_clean.csv")
+    ft = pd.read_csv("formations_techniques_clean.csv")
     ft = ft[ft['latitude'].notna() & ft['longitude'].notna()].copy()
 
     # Indicateurs clés (wide)
-    ic = pd.read_csv("data/indicateurs_cles_wide.csv")
+    ic = pd.read_csv("indicateurs_cles_wide.csv")
 
     # Budget (wide)
-    bud = pd.read_csv("data/budget_wide.csv")
+    bud = pd.read_csv("/budget_wide.csv")
 
     # Répartition établissements
-    rep = pd.read_csv("data/repartition_etablissements_clean.csv")
+    rep = pd.read_csv("repartition_etablissements_clean.csv")
 
     # Chômage
-    chom = pd.read_csv("data/chomage_clean.csv")
+    chom = pd.read_csv("chomage_clean.csv")
 
     # Dépenses PIB
-    dep = pd.read_csv("data/depenses_clean.csv")
+    dep = pd.read_csv("depenses_clean.csv")
 
     # Inscriptions
-    ins = pd.read_csv("data/inscriptions_clean.csv")
+    ins = pd.read_csv("inscriptions_clean.csv")
 
     return ft, ic, bud, rep, chom, dep, ins
 
