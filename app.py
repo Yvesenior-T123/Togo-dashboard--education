@@ -139,7 +139,7 @@ tabs = st.tabs(["Cartographie", "Indicateurs Cles", "Budget & Depenses", "Etabli
 
 # ---------- TAB 1: CARTOGRAPHIE ----------
 with tabs[0]:
-    st.header("🗺️ Cartographie des Formations Techniques")
+    st.header(" Cartographie des Formations Techniques")
 
     col1, col2 = st.columns([3, 2])
     with col1:
@@ -158,14 +158,14 @@ with tabs[0]:
             st.warning("Aucune donnee disponible pour les regions selectionnees")
 
     with col2:
-        st.subheader("📍 Repartition par region")
+        st.subheader(" Repartition par region")
         reg_counts = ft_f.groupby("region").size().reset_index(name="count")
         fig_reg = px.bar(reg_counts, x="region", y="count", color="region",
                          text="count", color_discrete_sequence=px.colors.sequential.Greens)
         fig_reg.update_layout(showlegend=False, height=280)
         st.plotly_chart(fig_reg, use_container_width=True)
 
-        st.subheader("🏫 Par type d'etablissement")
+        st.subheader(" Par type d'etablissement")
         type_counts = ft_f['type'].value_counts().head(8).reset_index()
         type_counts.columns = ["type", "count"]
         fig_type = px.pie(type_counts, names="type", values="count", hole=0.4,
@@ -175,7 +175,7 @@ with tabs[0]:
 
 # ---------- TAB 2: INDICATEURS CLÉS ----------
 with tabs[1]:
-    st.header("🎓 Indicateurs Cles de l'Enseignement Superieur")
+    st.header(" Indicateurs Cles de l'Enseignement Superieur")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -217,14 +217,14 @@ with tabs[1]:
             st.plotly_chart(fig_sci, use_container_width=True)
 
     # Tableau récap
-    st.subheader("📊 Tableau de bord des indicateurs cles")
+    st.subheader(" Tableau de bord des indicateurs cles")
     ic_display = ic.copy()
     ic_display.columns = [c.replace("'", "'") for c in ic_display.columns]
     st.dataframe(ic_display, use_container_width=True, hide_index=True)
 
 # ---------- TAB 3: BUDGET & DÉPENSES ----------
 with tabs[2]:
-    st.header("💰 Budget et Depenses de l'Enseignement Superieur")
+    st.header(" Budget et Depenses de l'Enseignement Superieur")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -266,7 +266,7 @@ with tabs[2]:
             st.plotly_chart(fig_prop, use_container_width=True)
 
     # Budget national vs PIB
-    st.subheader("📈 Budget National et PIB")
+    st.subheader(" Budget National et PIB")
     bud_nat = bud[['Date', 'budget_nat_vote', 'budget_nat_exec', 'pib']].dropna()
     if len(bud_nat) > 0:
         fig_nat = go.Figure()
@@ -278,7 +278,7 @@ with tabs[2]:
 
 # ---------- TAB 4: ÉTABLISSEMENTS ----------
 with tabs[3]:
-    st.header("🏛️ Repartition des Etablissements d'Enseignement Superieur")
+    st.header(" Repartition des Etablissements d'Enseignement Superieur")
 
     # Répartition par ville, type, statut
     rep_filt = rep[rep['villes'] != 'TOTAL'].copy()
@@ -303,18 +303,18 @@ with tabs[3]:
             st.plotly_chart(fig_pp, use_container_width=True)
 
     # Tableau détaillé
-    st.subheader("📋 Detail par ville, type et statut")
+    st.subheader("Detail par ville, type et statut")
     st.dataframe(rep_filt[['villes', 'type', 'statut', 'Value']].sort_values(['villes', 'type', 'statut']),
                  use_container_width=True, hide_index=True)
 
     # Formations techniques - tableau
-    st.subheader("🔧 Etablissements de formations techniques")
+    st.subheader(" Etablissements de formations techniques")
     st.dataframe(ft_f[['nom', 'region', 'prefecture_nom_bdd', 'type', 'statut', 'annee_creation']].sort_values('region'),
                  use_container_width=True, hide_index=True)
 
 # ---------- TAB 5: CHÔMAGE & EMPLOI ----------
 with tabs[4]:
-    st.header("💼 Chomage des Diplomes et Insertion Professionnelle")
+    st.header(" Chomage des Diplomes et Insertion Professionnelle")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -338,7 +338,7 @@ with tabs[4]:
             st.plotly_chart(fig_dep_pib, use_container_width=True)
 
     # Inscription brut tertiaire
-    st.subheader("📈 Taux d'inscription brut dans l'enseignement superieur (%)")
+    st.subheader(" Taux d'inscription brut dans l'enseignement superieur (%)")
     ins_data = ins[['date', 'value']].dropna().sort_values('date')
     if len(ins_data) > 0:
         fig_ins = px.area(ins_data, x='date', y='value',
@@ -348,7 +348,7 @@ with tabs[4]:
         st.plotly_chart(fig_ins, use_container_width=True)
 
     # Corrélation chômage vs inscription
-    st.subheader("🔗 Correlation : Inscription superieure vs Chomage des diplomes")
+    st.subheader(" Correlation : Inscription superieure vs Chomage des diplomes")
     # Fusionner sur les années communes
     chom_ins = chom_data.merge(ins_data, on='date', how='inner', suffixes=('_chomage', '_inscription'))
     if len(chom_ins) > 0:
@@ -358,43 +358,43 @@ with tabs[4]:
                               color='date', color_continuous_scale='Greens', trendline='ols')
         fig_corr.update_layout(height=400)
         st.plotly_chart(fig_corr, use_container_width=True)
-        st.markdown("<div class='alert-box'>📊 <b>Observation :</b> Plus le taux d'inscription superieure augmente, plus le chomage des diplomes tend a diminuer. Cela suggere une meilleure adequation entre l'offre de formation et le marche du travail a long terme.</div>", unsafe_allow_html=True)
+        st.markdown("<div class='alert-box'> <b>Observation :</b> Plus le taux d'inscription superieure augmente, plus le chomage des diplomes tend a diminuer. Cela suggere une meilleure adequation entre l'offre de formation et le marche du travail a long terme.</div>", unsafe_allow_html=True)
 
 # ---------- TAB 6: RECOMMANDATIONS ----------
 with tabs[5]:
-    st.header("💡 Recommandations Strategiques")
+    st.header(" Recommandations Strategiques")
 
     # Alertes automatiques
-    st.subheader("🚨 Alertes et Anomalies Detectees")
+    st.subheader(" Alertes et Anomalies Detectees")
 
     alerts = []
 
     # Alert ratio
     if latest_ratio > 50:
-        alerts.append(f"⚠️ <b>Ratio etudiant/enseignant critique :</b> {int(latest_ratio)}:1 dans les universites publiques (standard UNESCO: 25:1). Il faut recruter au moins {int((latest_ratio - 25) * 500 / 25)} enseignants supplementaires.")
+        alerts.append(f" <b>Ratio etudiant/enseignant critique :</b> {int(latest_ratio)}:1 dans les universites publiques (standard UNESCO: 25:1). Il faut recruter au moins {int((latest_ratio - 25) * 500 / 25)} enseignants supplementaires.")
 
     # Alert sciences
     if latest_sciences < 30:
-        alerts.append(f"⚠️ <b>Faible part des filieres scientifiques :</b> Seulement {latest_sciences}% des etudiants sont en STEM. Objectif recommande: 40% d'ici 2030.")
+        alerts.append(f" <b>Faible part des filieres scientifiques :</b> Seulement {latest_sciences}% des etudiants sont en STEM. Objectif recommande: 40% d'ici 2030.")
 
     # Alert chômage
     if latest_chomage > 10:
-        alerts.append(f"⚠️ <b>Chomage eleve des diplomes :</b> {latest_chomage}% des diplomes de l'enseignement superieur sont au chomage. Un observatoire de l'insertion est urgent.")
+        alerts.append(f" <b>Chomage eleve des diplomes :</b> {latest_chomage}% des diplomes de l'enseignement superieur sont au chomage. Un observatoire de l'insertion est urgent.")
 
     # Alert budget
     if len(bud_exec) > 1:
         taux_exec = bud_exec['budget_es_exec'].iloc[-1] / bud_exec['budget_es_vote'].iloc[-1] * 100
         if taux_exec < 85:
-            alerts.append(f"⚠️ <b>Taux d'execution budgetaire faible :</b> {taux_exec:.1f}% du budget ES vote est execute. Ameliorer la mobilisation des ressources.")
+            alerts.append(f" <b>Taux d'execution budgetaire faible :</b> {taux_exec:.1f}% du budget ES vote est execute. Ameliorer la mobilisation des ressources.")
         else:
-            alerts.append(f"✅ <b>Bon taux d'execution :</b> {taux_exec:.1f}% du budget ES est execute.")
+            alerts.append(f" <b>Bon taux d'execution :</b> {taux_exec:.1f}% du budget ES est execute.")
 
     # Alert dépenses
     if latest_dep_pib < 80:
-        alerts.append(f"⚠️ <b>Depenses par etudiant en baisse :</b> {latest_dep_pib:.1f}% du PIB/habitant. Le Togo est en-dessous de la moyenne africaine (120%).")
+        alerts.append(f" <b>Depenses par etudiant en baisse :</b> {latest_dep_pib:.1f}% du PIB/habitant. Le Togo est en-dessous de la moyenne africaine (120%).")
 
     for alert in alerts:
-        if alert.startswith("✅"):
+        if alert.startswith(""):
             st.markdown(f'<div class="success-box">{alert}</div>', unsafe_allow_html=True)
         else:
             st.markdown(f'<div class="alert-box">{alert}</div>', unsafe_allow_html=True)
@@ -403,21 +403,21 @@ with tabs[5]:
 
     # Recommandations
     recs = [
-        ("🎯 Reduire le ratio etudiant/enseignant", 
+        (" Reduire le ratio etudiant/enseignant", 
          f"Le ratio actuel est de {int(latest_ratio)}:1 dans les universites publiques. Recruter au moins 200 enseignants supplementaires d'ici 2027 pour atteindre le standard UNESCO (25:1). Budget estime: 600M FCFA/an."),
-        ("👩‍🔬 Promouvoir les filieres scientifiques et technologiques", 
+        (" Promouvoir les filieres scientifiques et technologiques", 
          f"Seulement {latest_sciences}% des etudiants sont en STEM. Augmenter les bourses ciblees de 30% et creer 3 nouveaux poles d'excellence en informatique, energie et biotechnologie."),
-        ("💰 Augmenter le budget de l'enseignement superieur", 
+        (" Augmenter le budget de l'enseignement superieur", 
          f"Le budget ES execute est de {budget_mds:.1f}Mds FCFA ({latest_dep_pib:.1f}% du PIB/habitant). Recommandation: atteindre 1.5% du PIB (standard CEDEAO) soit environ 38Mds FCFA."),
-        ("🏗️ Developper les formations techniques regionales", 
+        (" Developper les formations techniques regionales", 
          f"{nb_etab} etablissements de formation technique recenses, mais concentres a {ft_f['region'].value_counts().index[0] if len(ft_f) > 0 else 'N/A'}. Creer 5 centres regionaux dans les zones sous-dotees (Savanes, Centrale)."),
-        ("🤝 Renforcer les partenariats public-prive", 
+        (" Renforcer les partenariats public-prive", 
          f"Les subventions aux etablissements prives sont nulles (0 FCFA). Mettre en place un fonds de 2Mds FCFA pour soutenir les etablissements prives a fort taux d'insertion."),
-        ("📊 Creer un Observatoire National de l'Insertion (ONI)", 
+        (" Creer un Observatoire National de l'Insertion (ONI)", 
          f"Avec un taux de chomage de {latest_chomage}% et un taux d'inscription immediat des bacheliers de {taux_insc}%, un suivi trimestriel est indispensable pour ajuster l'offre de formation."),
-        ("🌾 Valoriser l'agriculture et l'agro-industrie", 
+        (" Valoriser l'agriculture et l'agro-industrie", 
          f"Le Togo est agricole a 40% mais peu de formations techniques y sont dediees. Developper des cursus en transformation agroalimentaire (anacarde, cacao, cafe) pour reduire le chomage."),
-        ("⚡ Investir dans le numerique et l'intelligence artificielle", 
+        (" Investir dans le numerique et l'intelligence artificielle", 
          f"Le numerique offre les meilleurs taux d'insertion. Doubler les places en licence informatique et creer un centre d'excellence IA au Togo pour repondre a la demande regionale.")
     ]
 
@@ -425,7 +425,7 @@ with tabs[5]:
         st.markdown(f'<div class="recommendation"><strong>{titre}</strong><br><span style="font-size:13px">{texte}</span></div>', unsafe_allow_html=True)
 
     # Matrice d'impact
-    st.subheader("📊 Matrice d'Impact / Facilite de mise en oeuvre")
+    st.subheader(" Matrice d'Impact / Facilite de mise en oeuvre")
     matrix = pd.DataFrame({
         "Action": ["Reduire ratio", "Promouvoir STEM", "Augmenter budget", 
                    "Formations regionales", "Partenariats Prive", "Observatoire ONI", 
@@ -445,19 +445,19 @@ with tabs[5]:
 
 # ---------- TAB 7: SIMULATEUR (FEATURE DIFFÉRENCIANTE) ----------
 with tabs[6]:
-    st.header("🔮 Simulateur de Scenarios — Impact Predictif")
+    st.header(" Simulateur de Scenarios — Impact Predictif")
     st.markdown("Ajustez les leviers ci-dessous pour simuler l'impact sur l'insertion professionnelle d'ici 2030.")
 
     col_s1, col_s2, col_s3 = st.columns(3)
     with col_s1:
-        budget_increase = st.slider("📈 Augmentation budget ES (%)", 0, 100, 20, 5)
-        nb_enseignants = st.slider("👨‍🏫 Enseignants supplementaires", 0, 500, 100, 10)
+        budget_increase = st.slider(" Augmentation budget ES (%)", 0, 100, 20, 5)
+        nb_enseignants = st.slider(" Enseignants supplementaires", 0, 500, 100, 10)
     with col_s2:
-        stem_bourses = st.slider("🎓 Bourses STEM supplementaires", 0, 1000, 200, 50)
-        partenariats = st.slider("🤝 Partenariats entreprises", 0, 50, 10, 5)
+        stem_bourses = st.slider(" Bourses STEM supplementaires", 0, 1000, 200, 50)
+        partenariats = st.slider(" Partenariats entreprises", 0, 50, 10, 5)
     with col_s3:
-        infra_invest = st.slider("🏗️ Investissement infrastructure (Mds FCFA)", 0, 20, 5, 1)
-        digital_focus = st.slider("💻 Focus numerique (% etudiants)", 0, 50, 15, 5)
+        infra_invest = st.slider(" Investissement infrastructure (Mds FCFA)", 0, 20, 5, 1)
+        digital_focus = st.slider(" Focus numerique (% etudiants)", 0, 50, 15, 5)
 
     # Modèle prédictif simplifié
     base_chomage = latest_chomage
@@ -477,7 +477,7 @@ with tabs[6]:
     sciences_2030 = min(50, base_sciences + stem_bourses * 0.02 + digital_focus * 0.3)
 
     st.divider()
-    st.subheader("📊 Projections 2030")
+    st.subheader(" Projections 2030")
 
     c1, c2, c3, c4 = st.columns(4)
     delta_chom = chomage_2030 - base_chomage
@@ -502,7 +502,7 @@ with tabs[6]:
     fig_sim.update_layout(barmode='group', title="Comparatif 2024 vs 2030 (simule)", height=400)
     st.plotly_chart(fig_sim, use_container_width=True)
 
-    st.markdown("<div class='success-box'>💡 <b>Conseil:</b> Pour maximiser l'impact, concentrez vos efforts sur le recrutement d'enseignants et l'augmentation des bourses STEM. Ces deux leviers ont le meilleur rapport cout/efficacite.</div>", unsafe_allow_html=True)
+    st.markdown("<div class='success-box'> <b>Conseil:</b> Pour maximiser l'impact, concentrez vos efforts sur le recrutement d'enseignants et l'augmentation des bourses STEM. Ces deux leviers ont le meilleur rapport cout/efficacite.</div>", unsafe_allow_html=True)
 
 # ==================== FOOTER ====================
 st.divider()
