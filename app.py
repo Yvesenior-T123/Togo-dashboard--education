@@ -41,34 +41,16 @@ def load_data():
     ft = pd.read_csv(BASE_DIR / "formations_techniques_clean.csv")
     ft = ft[ft['latitude'].notna() & ft['longitude'].notna()].copy()
 
-    # Indicateurs clés (wide) - renommage pour éviter les accents/apostrophes
+    # Indicateurs clés (wide) - renommage par index pour éviter les problèmes d'accents
     ic = pd.read_csv(BASE_DIR / "indicateurs_cles_wide.csv")
-    ic = ic.rename(columns={
-        'Evolution des effectifs des étudiants inscrits': 'effectifs',
-        'femmes': 'femmes',
-        "%d'étudiants dans les filières scientifiques et technologiques": 'sciences',
-        'ratio étudiant/ enseignants dans les universités publiques': 'ratio',
-        'Dépenses annuelles par étudiants': 'depenses',
-        "Part du Budget alloué à l'enseignement (%)": 'part_budget',
-        "Proportion du Budget de l'enseignement supérieur dans le Budget National et par rapport au PIB": 'prop_budget',
-        "Taux d'inscription immédiat des nouveaux bacheliers dans les UPT": 'taux_inscription',
-        'Rapport de féminité des étudiants': 'rapport_fem',
-        "Nombre d'étudiant pour 100000 hbts": 'etudiants_100k',
-        "Nombre d'étudiant des universités publiques pour 100000 hbts": 'etudiants_pub_100k',
-    })
+    ic.columns = ['Date', 'filles_sci', 'sciences', 'depenses', 'effectifs', 'etudiants_100k',
+                  'etudiants_pub_100k', 'part_budget', 'femmes', 'prop_budget', 'rapport_fem',
+                  'taux_inscription', 'ratio']
 
-    # Budget (wide) - renommage
+    # Budget (wide) - renommage par index
     bud = pd.read_csv(BASE_DIR / "budget_wide.csv")
-    bud = bud.rename(columns={
-        "BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR VOTÉ": 'budget_es_vote',
-        "BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR EXÉCUTÉ": 'budget_es_exec',
-        "BUDGET DU SECTEUR DE L'ÉDUCATION EXÉCUTÉ": 'budget_educ_exec',
-        "BUDGET DU SECTEUR DE L'ÉDUCATION VOTÉ": 'budget_educ_vote',
-        'BUDGET NATIONAL EXÉCUTÉ': 'budget_nat_exec',
-        'BUDGET NATIONAL VOTÉ': 'budget_nat_vote',
-        'PRODUIT INTÉRIEUR BRUT (PIB)': 'pib',
-        "SUBVENTION DE L'ETAT ALLOUÉE AUX ÉTABLISSEMENTS PRIVÉS D'ENSEIGNEMENT SUPÉRIEUR": 'subvention_prive',
-    })
+    bud.columns = ['Date', 'budget_es_exec', 'budget_es_vote', 'budget_educ_exec',
+                   'budget_educ_vote', 'budget_nat_exec', 'budget_nat_vote', 'pib', 'subvention_prive']
 
     # Répartition établissements
     rep = pd.read_csv(BASE_DIR / "repartition_etablissements_clean.csv")
