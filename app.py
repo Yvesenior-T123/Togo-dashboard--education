@@ -37,19 +37,49 @@ BASE_DIR = Path(__file__).resolve().parent
 
 @st.cache_data
 def load_data():
+    # Formations techniques
     ft = pd.read_csv(BASE_DIR / "formations_techniques_clean.csv")
     ft = ft[ft['latitude'].notna() & ft['longitude'].notna()].copy()
 
+    # Indicateurs clés (wide) - renommage pour éviter les accents/apostrophes
     ic = pd.read_csv(BASE_DIR / "indicateurs_cles_wide.csv")
+    ic = ic.rename(columns={
+        'Evolution des effectifs des étudiants inscrits': 'effectifs',
+        'femmes': 'femmes',
+        "%d'étudiants dans les filières scientifiques et technologiques": 'sciences',
+        'ratio étudiant/ enseignants dans les universités publiques': 'ratio',
+        'Dépenses annuelles par étudiants': 'depenses',
+        "Part du Budget alloué à l'enseignement (%)": 'part_budget',
+        "Proportion du Budget de l'enseignement supérieur dans le Budget National et par rapport au PIB": 'prop_budget',
+        "Taux d'inscription immédiat des nouveaux bacheliers dans les UPT": 'taux_inscription',
+        'Rapport de féminité des étudiants': 'rapport_fem',
+        "Nombre d'étudiant pour 100000 hbts": 'etudiants_100k',
+        "Nombre d'étudiant des universités publiques pour 100000 hbts": 'etudiants_pub_100k',
+    })
 
+    # Budget (wide) - renommage
     bud = pd.read_csv(BASE_DIR / "budget_wide.csv")
+    bud = bud.rename(columns={
+        "BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR VOTÉ": 'budget_es_vote',
+        "BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR EXÉCUTÉ": 'budget_es_exec',
+        "BUDGET DU SECTEUR DE L'ÉDUCATION EXÉCUTÉ": 'budget_educ_exec',
+        "BUDGET DU SECTEUR DE L'ÉDUCATION VOTÉ": 'budget_educ_vote',
+        'BUDGET NATIONAL EXÉCUTÉ': 'budget_nat_exec',
+        'BUDGET NATIONAL VOTÉ': 'budget_nat_vote',
+        'PRODUIT INTÉRIEUR BRUT (PIB)': 'pib',
+        "SUBVENTION DE L'ETAT ALLOUÉE AUX ÉTABLISSEMENTS PRIVÉS D'ENSEIGNEMENT SUPÉRIEUR": 'subvention_prive',
+    })
 
+    # Répartition établissements
     rep = pd.read_csv(BASE_DIR / "repartition_etablissements_clean.csv")
 
+    # Chômage
     chom = pd.read_csv(BASE_DIR / "chomage_clean.csv")
 
+    # Dépenses PIB
     dep = pd.read_csv(BASE_DIR / "depenses_clean.csv")
 
+    # Inscriptions
     ins = pd.read_csv(BASE_DIR / "inscriptions_clean.csv")
 
     return ft, ic, bud, rep, chom, dep, ins
@@ -86,16 +116,16 @@ nb_etab = len(ft_f)
 nb_regions = ft_f['region'].nunique() if len(ft_f) > 0 else 0
 
 # Dernières valeurs connues
-latest_effectifs = ic[ic['Evolution des effectifs des étudiants inscrits'].notna()]['Evolution des effectifs des étudiants inscrits'].iloc[-1] if len(ic) > 0 else 99820
-latest_femmes = ic[ic['Proportion de femmes'].notna()]['Proportion de femmes'].iloc[-1] if len(ic) > 0 else 51.5
-latest_sciences = ic[ic["%d'étudiants dans les filières scientifiques et technologiques"].notna()]["%d'étudiants dans les filières scientifiques et technologiques"].iloc[-1] if len(ic) > 0 else 23.62
-latest_ratio = ic[ic['ratio étudiant/ enseignants dans les universités publiques'].notna()]['ratio étudiant/ enseignants dans les universités publiques'].iloc[-1] if len(ic) > 0 else 91
+latest_effectifs = ic[ic['effectifs'].notna()]['effectifs'].iloc[-1] if len(ic) > 0 else 99820
+latest_femmes = ic[ic['femmes'].notna()]['femmes'].iloc[-1] if len(ic) > 0 else 51.5
+latest_sciences = ic[ic['sciences'].notna()]['sciences'].iloc[-1] if len(ic) > 0 else 23.62
+latest_ratio = ic[ic['ratio'].notna()]['ratio'].iloc[-1] if len(ic) > 0 else 91
 latest_chomage = chom[chom['value'].notna()]['value'].iloc[-1] if len(chom) > 0 else 7.068
-latest_budget = bud[bud["BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR EXÉCUTÉ"].notna()]["BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR EXÉCUTÉ"].iloc[-1] if len(bud) > 0 else 32171.9
-latest_depenses = ic[ic['Dépenses annuelles par étudiants'].notna()]['Dépenses annuelles par étudiants'].iloc[-1] if len(ic) > 0 else 354110
+latest_budget = bud[bud['budget_es_exec'].notna()]['budget_es_exec'].iloc[-1] if len(bud) > 0 else 32171.9
+latest_depenses = ic[ic['depenses'].notna()]['depenses'].iloc[-1] if len(ic) > 0 else 354110
 
 # Taux inscription immédiat
-taux_insc = ic[ic["Taux d'inscription immédiat des nouveaux bacheliers dans les UPT"].notna()]["Taux d'inscription immédiat des nouveaux bacheliers dans les UPT"].iloc[-1] if len(ic) > 0 else 58.24
+taux_insc = ic[ic['taux_inscription'].notna()]['taux_inscription'].iloc[-1] if len(ic) > 0 else 58.24
 
 # Taux inscription brut
 latest_insc_brut = ins[ins['value'].notna()]['value'].iloc[-1] if len(ins) > 0 else 15.07
@@ -168,17 +198,17 @@ with tabs[1]:
     col1, col2 = st.columns(2)
     with col1:
         # Effectifs
-        eff_data = ic[['Date', 'Evolution des effectifs des étudiants inscrits']].dropna()
+        eff_data = ic[['Date', 'effectifs']].dropna()
         if len(eff_data) > 0:
-            fig_eff = px.line(eff_data, x='Date', y='Evolution des effectifs des étudiants inscrits', markers=True,
+            fig_eff = px.line(eff_data, x='Date', y='effectifs', markers=True,
                               title="Evolution des effectifs etudiants inscrits", color_discrete_sequence=["#006A4E"])
             fig_eff.update_layout(height=320)
             st.plotly_chart(fig_eff, use_container_width=True)
 
         # Féminisation
-        fem_data = ic[['Date', 'Proportion de femmes']].dropna()
+        fem_data = ic[['Date', 'femmes']].dropna()
         if len(fem_data) > 0:
-            fig_fem = px.line(fem_data, x='Date', y='Proportion de femmes', markers=True,
+            fig_fem = px.line(fem_data, x='Date', y='femmes', markers=True,
                               title="Proportion de femmes (%)", color_discrete_sequence=["#E91E63"])
             fig_fem.add_hline(y=50, line_dash="dash", line_color="gray", annotation_text="Parite")
             fig_fem.update_layout(height=320)
@@ -186,9 +216,9 @@ with tabs[1]:
 
     with col2:
         # Ratio étudiant/enseignant
-        ratio_data = ic[['Date', 'ratio étudiant/ enseignants dans les universités publiques']].dropna()
+        ratio_data = ic[['Date', 'ratio']].dropna()
         if len(ratio_data) > 0:
-            fig_ratio = px.bar(ratio_data, x='Date', y='ratio étudiant/ enseignants dans les universités publiques',
+            fig_ratio = px.bar(ratio_data, x='Date', y='ratio',
                                title="Ratio Etudiant / Enseignant (Universites publiques)", text_auto=True,
                                color_discrete_sequence=["#FF9800"])
             fig_ratio.add_hline(y=25, line_dash="dash", line_color="green", annotation_text="Standard UNESCO")
@@ -196,9 +226,9 @@ with tabs[1]:
             st.plotly_chart(fig_ratio, use_container_width=True)
 
         # Filières scientifiques
-        sci_data = ic[['Date', "%d'étudiants dans les filières scientifiques et technologiques"]].dropna()
+        sci_data = ic[['Date', 'sciences']].dropna()
         if len(sci_data) > 0:
-            fig_sci = px.area(sci_data, x='Date', y="%d'étudiants dans les filières scientifiques et technologiques",
+            fig_sci = px.area(sci_data, x='Date', y='sciences',
                               title="Part des filieres scientifiques et technologiques (%)",
                               color_discrete_sequence=["#2196F3"])
             fig_sci.update_layout(height=320)
@@ -217,19 +247,19 @@ with tabs[2]:
     col1, col2 = st.columns(2)
     with col1:
         # Budget voté vs exécuté
-        bud_exec = bud[['Date', "BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR VOTÉ", "BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR EXÉCUTÉ"]].dropna()
+        bud_exec = bud[['Date', 'budget_es_vote', 'budget_es_exec']].dropna()
         if len(bud_exec) > 0:
             fig_bud = go.Figure()
-            fig_bud.add_trace(go.Bar(name='Budget Vote', x=bud_exec['Date'], y=bud_exec["BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR VOTÉ"], marker_color='#006A4E'))
-            fig_bud.add_trace(go.Bar(name='Budget Execute', x=bud_exec['Date'], y=bud_exec["BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR EXÉCUTÉ"], marker_color='#00A86B'))
+            fig_bud.add_trace(go.Bar(name='Budget Vote', x=bud_exec['Date'], y=bud_exec['budget_es_vote'], marker_color='#006A4E'))
+            fig_bud.add_trace(go.Bar(name='Budget Execute', x=bud_exec['Date'], y=bud_exec['budget_es_exec'], marker_color='#00A86B'))
             fig_bud.update_layout(barmode='group', title="Budget VOTE vs EXECUTE (Milliers FCFA)", height=350)
             st.plotly_chart(fig_bud, use_container_width=True)
 
     with col2:
         # Dépenses par étudiant
-        dep_data = ic[['Date', 'Dépenses annuelles par étudiants']].dropna()
+        dep_data = ic[['Date', 'depenses']].dropna()
         if len(dep_data) > 0:
-            fig_dep = px.bar(dep_data, x='Date', y='Dépenses annuelles par étudiants', text_auto=True,
+            fig_dep = px.bar(dep_data, x='Date', y='depenses', text_auto=True,
                              title="Depenses annuelles par etudiant (FCFA)", color_discrete_sequence=["#FF9800"])
             fig_dep.update_layout(height=350)
             st.plotly_chart(fig_dep, use_container_width=True)
@@ -237,30 +267,30 @@ with tabs[2]:
     col3, col4 = st.columns(2)
     with col3:
         # Part du budget éducation
-        part_edu = ic[['Date', "Part du Budget alloué à l'enseignement (%)"]].dropna()
+        part_edu = ic[['Date', 'part_budget']].dropna()
         if len(part_edu) > 0:
-            fig_part = px.line(part_edu, x='Date', y="Part du Budget alloué à l'enseignement (%)", markers=True,
+            fig_part = px.line(part_edu, x='Date', y='part_budget', markers=True,
                                title="Part du budget alloue a l'enseignement (%)", color_discrete_sequence=["#9C27B0"])
             fig_part.update_layout(height=320)
             st.plotly_chart(fig_part, use_container_width=True)
 
     with col4:
         # Proportion budget ES / Budget National
-        prop_es = ic[['Date', "Proportion du Budget de l'enseignement supérieur dans le Budget National et par rapport au PIB"]].dropna()
+        prop_es = ic[['Date', 'prop_budget']].dropna()
         if len(prop_es) > 0:
-            fig_prop = px.area(prop_es, x='Date', y="Proportion du Budget de l'enseignement supérieur dans le Budget National et par rapport au PIB",
+            fig_prop = px.area(prop_es, x='Date', y='prop_budget',
                                title="Budget ES / Budget National (%)", color_discrete_sequence=["#673AB7"])
             fig_prop.update_layout(height=320)
             st.plotly_chart(fig_prop, use_container_width=True)
 
     # Budget national vs PIB
     st.subheader("📈 Budget National et PIB")
-    bud_nat = bud[['Date', 'BUDGET NATIONAL VOTÉ', 'BUDGET NATIONAL EXÉCUTÉ', 'PRODUIT INTÉRIEUR BRUT (PIB)']].dropna()
+    bud_nat = bud[['Date', 'budget_nat_vote', 'budget_nat_exec', 'pib']].dropna()
     if len(bud_nat) > 0:
         fig_nat = go.Figure()
-        fig_nat.add_trace(go.Bar(name='Budget National Vote', x=bud_nat['Date'], y=bud_nat['BUDGET NATIONAL VOTÉ'], marker_color='#006A4E'))
-        fig_nat.add_trace(go.Bar(name='Budget National Execute', x=bud_nat['Date'], y=bud_nat['BUDGET NATIONAL EXÉCUTÉ'], marker_color='#4CAF50'))
-        fig_nat.add_trace(go.Scatter(name='PIB', x=bud_nat['Date'], y=bud_nat['PRODUIT INTÉRIEUR BRUT (PIB)'], mode='lines+markers', line=dict(color='#FF5722', width=3)))
+        fig_nat.add_trace(go.Bar(name='Budget National Vote', x=bud_nat['Date'], y=bud_nat['budget_nat_vote'], marker_color='#006A4E'))
+        fig_nat.add_trace(go.Bar(name='Budget National Execute', x=bud_nat['Date'], y=bud_nat['budget_nat_exec'], marker_color='#4CAF50'))
+        fig_nat.add_trace(go.Scatter(name='PIB', x=bud_nat['Date'], y=bud_nat['pib'], mode='lines+markers', line=dict(color='#FF5722', width=3)))
         fig_nat.update_layout(barmode='group', title="Budget National vs PIB (Milliers FCFA)", height=380)
         st.plotly_chart(fig_nat, use_container_width=True)
 
@@ -371,7 +401,7 @@ with tabs[5]:
 
     # Alert budget
     if len(bud_exec) > 1:
-        taux_exec = bud_exec["BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR EXÉCUTÉ"].iloc[-1] / bud_exec["BUDGET DE L'ENSEIGNEMENT SUPÉRIEUR VOTÉ"].iloc[-1] * 100
+        taux_exec = bud_exec['budget_es_exec'].iloc[-1] / bud_exec['budget_es_vote'].iloc[-1] * 100
         if taux_exec < 85:
             alerts.append(f"⚠️ <b>Taux d'execution budgetaire faible :</b> {taux_exec:.1f}% du budget ES vote est execute. Ameliorer la mobilisation des ressources.")
         else:
